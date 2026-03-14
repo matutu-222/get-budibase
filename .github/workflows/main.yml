@@ -1,0 +1,23 @@
+name: Get Budibase Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install skopeo
+        run: sudo apt-get update && sudo apt-get install -y skopeo
+
+      - name: Copy image to tar
+        run: skopeo copy docker://budibase/budibase:latest docker-archive:budibase.tar:budibase/budibase:latest
+
+      - name: Upload tar
+        uses: actions/upload-artifact@v4
+        with:
+          name: budibase-image
+          path: budibase.tar
